@@ -1,2 +1,12 @@
-server.address=192.168.0.103
-server.port=8080
+server:
+  address: localhost
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:h2:mem:mydb
+    username: sa
+    password: password
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
