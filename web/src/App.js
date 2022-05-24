@@ -1,26 +1,31 @@
-import {useEffect, useState} from "react";
-import Header from "./components/Header";
-import fetchMeasurements from "./api/api";
-
+import * as React from 'react';
+import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
+import DashboardPage from "./pages/DashboardPage";
+import LoginPage from "./pages/LoginPage";
+import {UserInfoProvider} from "./utils/UserInfoProvider";
+import NavBar from "./components/NavBar";
+import RegisterPage from "./pages/RegisterPage";
+import ProfilePage from "./pages/ProfilePage";
+import AdminPanelPage from "./pages/AdminPanelPage";
+import HomePage from "./pages/HomePage";
 
 function App() {
 
-  const [measurements, setMeasurements] = useState([]);
-
-  useEffect(() => {
-    const token = 'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqb2huLnNtaXRoQGVtYWlsLmNvbSIsImlhdCI6MTY1MjY0NDU5NCwiZXhwIjoxNjUyNzMwOTk0fQ.c6MMmblUopL_8Iq60uOMUz0CYONqVqwH7taTcoxnVFiYmjY5wu4lw37nc-PmEiE_Ky8TFj6JEdQDh4gMkBIYxw'
-    fetchMeasurements(token).then(data => setMeasurements(data))
-  }, [measurements]);
-
-  return (
-    <div>
-      <Header/>
-        <p style={{margin: '20px'}}>
-          Measurements: <br/>
-          {JSON.stringify(measurements)}
-        </p>
-    </div>
-  );
+    return (
+        <UserInfoProvider>
+            <Router>
+                <NavBar />
+                    <Routes >
+                          <Route exact path="/" element={<HomePage />} />
+                          <Route exact path="/dashboard" element={<DashboardPage />} />
+                          <Route exact path="/profile" element={<ProfilePage />} />
+                          <Route exact path="/admin-panel" element={<AdminPanelPage />} />
+                          <Route exact path="/login" element={<LoginPage />} />
+                          <Route exact path="/register" element={<RegisterPage />} />
+                    </Routes >
+          </Router>
+      </UserInfoProvider>
+    );
 }
 
 export default App;
