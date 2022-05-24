@@ -2,8 +2,11 @@ package com.agh.communicationplatform.measurement;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/v1/measurement")
+@CrossOrigin(origins = "http://localhost:3000")
 public class MeasurementController {
 
     private final MeasurementService measurementService;
@@ -13,12 +16,12 @@ public class MeasurementController {
     }
 
     @GetMapping
-    String readMeasurement() {
+    List<Measurement> readMeasurement() {
         return measurementService.readMeasurement();
     }
 
     @PostMapping
-    void saveMeasurement(@RequestBody String input) {
-        measurementService.saveMeasurement(input);
+    void saveMeasurement(@RequestBody Measurement measurement) {
+        measurementService.saveMeasurement(measurement);
     }
 }
