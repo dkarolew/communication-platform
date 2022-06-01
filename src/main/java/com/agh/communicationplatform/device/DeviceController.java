@@ -6,7 +6,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/device")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class DeviceController {
 
     private final DeviceService deviceService;

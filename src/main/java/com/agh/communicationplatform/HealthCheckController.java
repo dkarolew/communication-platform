@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("api/v1")
-@CrossOrigin(origins = {"http://localhost:3000", "http://localhost:8080/proxy/api/v1"})
+@CrossOrigin
 public class HealthCheckController {
 
     @GetMapping

@@ -6,7 +6,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/auditEvent")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class AuditEventController {
 
     private final AuditEventService auditEventService;

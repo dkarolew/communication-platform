@@ -6,7 +6,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/measurement")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class MeasurementController {
 
     private final MeasurementService measurementService;

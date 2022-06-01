@@ -13,10 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
 @RestController
 @RequestMapping(path = "api/v1/report")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin
 public class ReportController {
 
     private final ReportGenerator reportGenerator;
