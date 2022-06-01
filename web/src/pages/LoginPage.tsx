@@ -52,6 +52,7 @@ const LoginPage = () => {
 
     return (
         <StyledDiv>
+            <StyledImage src="login-icon.jpg" alt='login-icon' />
             <form>
                 <div className="form-outline mb-4">
                     <label>Email</label>
@@ -88,7 +89,6 @@ const LoginPage = () => {
                     </p>
                 )}
             </form>
-
         </StyledDiv>
     );
 };
@@ -103,4 +103,13 @@ const StyledDiv = styled.div`
     width: 30%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+`;
+
+const StyledImage = styled.img`
+    position: absolute;
+    left: 50%;
+    top: -30%;
+    width: 30%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);  
 `;
