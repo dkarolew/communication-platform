@@ -42,7 +42,7 @@ const LoginPage = () => {
                 } else if (response.status === 401) {
                     setLoginError('Invalid credentials')
                 } else if (response.status === 500) {
-                    setLoginError('Account is not activated')
+                    setLoginError('Account is not activated or not exist')
                 }
             });
 
