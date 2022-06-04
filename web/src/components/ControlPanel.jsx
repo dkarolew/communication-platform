@@ -25,7 +25,6 @@ const ControlPanel = () => {
 
         changeDeviceState(deviceDto, userInfo.token)
             .then(response => {
-                console.log(response)
                 if (response.status !== 200) {
                     setError('Error during changing device state')
                     setSuccess('')
@@ -48,7 +47,6 @@ const ControlPanel = () => {
 
         changeDeviceMeasurementFrequency(deviceDto, userInfo.token)
             .then(response => {
-                console.log(response)
                 if (response.status !== 200) {
                     setError('Error during changing frequency')
                     setSuccess('')
