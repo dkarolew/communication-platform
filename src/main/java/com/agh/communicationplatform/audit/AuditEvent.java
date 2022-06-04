@@ -10,6 +10,7 @@ import java.util.Date;
 public class AuditEvent {
     @Id
     @Column(name = "AUDIT_EVENT_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long auditEventId;
 
     @Column(name = "TYPE")
