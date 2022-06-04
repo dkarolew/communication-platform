@@ -4,6 +4,8 @@ INSERT INTO user (user_id, first_name, last_name, role, email, password)
 	VALUES (1, 'John', 'Smith', 'USER', 'john.smith@email.com', '$2a$12$Fw8mTDtGdJ/UnCbnXyj2DeTVrlUeX8qNB4vGfyaeWdwNACSEthk0C');
 INSERT INTO user (user_id, first_name, last_name, role, email, password)
 	VALUES (2, 'Thomas', 'Robinson', 'USER', 'thomas.robinson@email.com', '$2a$12$Fw8mTDtGdJ/UnCbnXyj2DeTVrlUeX8qNB4vGfyaeWdwNACSEthk0C');
+INSERT INTO user (user_id, first_name, last_name, role, email, password)
+	VALUES (3, 'Tom', 'Brown', 'ADMIN', 'admin@email.com', '$2a$12$Fw8mTDtGdJ/UnCbnXyj2DeTVrlUeX8qNB4vGfyaeWdwNACSEthk0C');
 
 ----------------------------------------accounts----------------------------------------
 
@@ -11,6 +13,8 @@ INSERT INTO account (account_id, user_id, state, activation_token)
 	VALUES (1, 1, 'NOT_CONFIRMED', '109224c7f5154b95a9f943e773bf94fe');
 INSERT INTO account (account_id, user_id, state, activation_token)
 	VALUES (2, 2, 'CONFIRMED', '32818fc6f89b495baa0edc1be251eaa7');
+INSERT INTO account (account_id, user_id, state, activation_token)
+	VALUES (3, 3, 'CONFIRMED', '7b8dd6ce2ea84cc0b14583fc1d86e7aa');
 
 ----------------------------------------devices----------------------------------------
 
