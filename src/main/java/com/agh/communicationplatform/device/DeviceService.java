@@ -22,8 +22,12 @@ public class DeviceService {
         return deviceRepository.findAll();
     }
 
-    public Device getDevice(Long deviceId) {
-        return deviceRepository.getById(deviceId);
+    @Transactional
+    public DeviceInfoDto getDevice(Long deviceId) {
+        Device device = deviceRepository.getById(deviceId);
+
+        return new DeviceInfoDto(device.getDeviceId(), device.getName(), device.getModel(),
+                device.getState(), device.getMeasurementFrequency());
     }
 
     public void addDevice(DeviceDto deviceDto) {
