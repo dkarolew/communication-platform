@@ -60,7 +60,7 @@ public class DeviceService {
 
         deviceRepository.changeDeviceState(deviceId, state);
 
-        auditEventService.logAuditEvent(AuditEventType.CHANGED_DEVICE_STATE, "Changed IoT device with " + deviceId + " to " + state);
+        auditEventService.logAuditEvent(AuditEventType.CHANGED_DEVICE_STATE, "Changed IoT device with " + deviceId + " id to " + state);
     }
 
     @Transactional
