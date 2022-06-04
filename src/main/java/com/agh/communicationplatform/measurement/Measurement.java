@@ -10,6 +10,7 @@ import java.util.Date;
 public class Measurement {
     @Id
     @Column(name = "MEASUREMENT_ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long measurementId;
 
     @Column(name = "DEVICE_ID")
@@ -26,7 +27,8 @@ public class Measurement {
 
     public Measurement() {}
 
-    public Measurement(String type, Float value, Date measurementTime) {
+    public Measurement(Long deviceId, String type, Float value, Date measurementTime) {
+        this.deviceId = deviceId;
         this.type = type;
         this.value = value;
         this.measurementTime = measurementTime;

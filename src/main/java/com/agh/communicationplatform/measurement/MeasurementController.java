@@ -21,7 +21,7 @@ public class MeasurementController {
     }
 
     @PostMapping
-    void saveMeasurement(@RequestBody Measurement measurement) {
-        measurementService.saveMeasurement(measurement);
+    void saveMeasurement(@RequestBody MeasurementDto measurementDto) {
+        measurementService.saveMeasurement(measurementDto);
     }
 }
