@@ -1,5 +1,7 @@
 package com.agh.communicationplatform.account;
 
+import com.agh.communicationplatform.audit.AuditEventService;
+import com.agh.communicationplatform.audit.AuditEventType;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -10,9 +12,11 @@ import java.util.UUID;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+    private final AuditEventService auditEventService;
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, AuditEventService auditEventService) {
         this.accountRepository = accountRepository;
+        this.auditEventService = auditEventService;
     }
 
     public List<Account> getAccounts() {
@@ -26,5 +30,7 @@ public class AccountService {
         if (isAccountExists) {
             accountRepository.activateAccount(activationToken);
         }
+
+        auditEventService.logAuditEvent(AuditEventType.ACCOUNT_ACTIVATED, "Account successfully activated");
     }
 }

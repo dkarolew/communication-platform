@@ -35,6 +35,6 @@ INSERT INTO measurement (measurement_id, device_id, type, value, measurement_tim
 ----------------------------------------audit_events-----------------------------------
 
 INSERT INTO audit_event (audit_event_id, type, message, event_time)
-	VALUES (1, 'WRONG_PASSWORD', 'User entered wrong password', CURRENT_TIMESTAMP());
+	VALUES (1, 'NEW_USER_REGISTERED', 'New user registered', CURRENT_TIMESTAMP());
 INSERT INTO audit_event (audit_event_id, type, message, event_time)
-	VALUES (2, 'NEW_ACCOUNT_REGISTERED', 'New user registered', CURRENT_TIMESTAMP());
+	VALUES (2, 'INVALID_CREDENTIALS', 'User entered wrong login or password', CURRENT_TIMESTAMP());

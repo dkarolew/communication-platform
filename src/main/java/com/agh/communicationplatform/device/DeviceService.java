@@ -2,6 +2,8 @@ package com.agh.communicationplatform.device;
 
 import com.agh.communicationplatform.account.Account;
 import com.agh.communicationplatform.account.AccountRepository;
+import com.agh.communicationplatform.audit.AuditEventService;
+import com.agh.communicationplatform.audit.AuditEventType;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -12,10 +14,12 @@ public class DeviceService {
 
     private final DeviceRepository deviceRepository;
     private final AccountRepository accountRepository;
+    private final AuditEventService auditEventService;
 
-    public DeviceService(DeviceRepository deviceRepository, AccountRepository accountRepository) {
+    public DeviceService(DeviceRepository deviceRepository, AccountRepository accountRepository, AuditEventService auditEventService) {
         this.deviceRepository = deviceRepository;
         this.accountRepository = accountRepository;
+        this.auditEventService = auditEventService;
     }
 
     public List<Device> getDevices() {
@@ -38,6 +42,8 @@ public class DeviceService {
         Device device = new Device(accountId, deviceDto.getName(), deviceDto.getModel(),
                 deviceDto.getState(), deviceDto.getMeasurementFrequency());
         deviceRepository.save(device);
+
+        auditEventService.logAuditEvent(AuditEventType.NEW_DEVICE_ADDED, "Added new IoT device");
     }
 
     public void deleteDevice(Long deviceId) {
@@ -53,6 +59,8 @@ public class DeviceService {
         }
 
         deviceRepository.changeDeviceState(deviceId, state);
+
+        auditEventService.logAuditEvent(AuditEventType.CHANGED_DEVICE_STATE, "Changed IoT device with " + deviceId + " to " + state);
     }
 
     @Transactional

@@ -1,5 +1,7 @@
 package com.agh.communicationplatform.report;
 
+import com.agh.communicationplatform.audit.AuditEventService;
+import com.agh.communicationplatform.audit.AuditEventType;
 import org.springframework.stereotype.Component;
 
 import com.lowagie.text.*;
@@ -10,6 +12,12 @@ import java.io.IOException;
 
 @Component
 public class ReportGenerator {
+
+    private final AuditEventService auditEventService;
+
+    public ReportGenerator(AuditEventService auditEventService) {
+        this.auditEventService = auditEventService;
+    }
 
     public void export(HttpServletResponse response) throws DocumentException, IOException {
         Document document = new Document(PageSize.A4);
@@ -35,5 +43,7 @@ public class ReportGenerator {
         document.add(paragraph);
         document.add(paragraph2);
         document.close();
+
+        auditEventService.logAuditEvent(AuditEventType.REPORT_GENERATED, "Report on registered devices has been generated");
     }
 }

@@ -1,5 +1,7 @@
 package com.agh.communicationplatform.email;
 
+import com.agh.communicationplatform.audit.AuditEventService;
+import com.agh.communicationplatform.audit.AuditEventType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,12 @@ public class SmtpEmailService implements EmailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(SmtpEmailService.class);
     private static final String SENDER = "communication.platformm@gmail.com";
     private static final String PASSWORD = "kn#:6&H7mu&WVP?z9K$a";
+
+    private final AuditEventService auditEventService;
+
+    public SmtpEmailService(AuditEventService auditEventService) {
+        this.auditEventService = auditEventService;
+    }
 
     @Override
     public void sendEmail(EmailMessage emailMessage) {
@@ -42,8 +50,10 @@ public class SmtpEmailService implements EmailService {
 
             Transport.send(message);
             LOGGER.info("Email sent successfully");
+            auditEventService.logAuditEvent(AuditEventType.SEND_EMAIL_SUCCESS, "Email sent to " + recipient);
         } catch (MessagingException e) {
             LOGGER.error(String.format("Email sent error: %s", e));
+            auditEventService.logAuditEvent(AuditEventType.SEND_EMAIL_ERROR, "Error during sending email to " + recipient);
         }
     }
 }

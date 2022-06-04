@@ -1,6 +1,8 @@
 package com.agh.communicationplatform.security;
 
 import com.agh.communicationplatform.account.*;
+import com.agh.communicationplatform.audit.AuditEventService;
+import com.agh.communicationplatform.audit.AuditEventType;
 import com.agh.communicationplatform.email.EmailContentGenerator;
 import com.agh.communicationplatform.email.EmailMessage;
 import com.agh.communicationplatform.email.EmailService;
@@ -31,8 +33,9 @@ public class AuthenticationService {
     private final ActivationLinkCreator activationLinkCreator;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
+    private final AuditEventService auditEventService;
 
-    public AuthenticationService(AuthenticationManager authenticationManager, UserRepository userRepository, AccountRepository accountRepository, EmailService emailService, ActivationLinkCreator activationLinkCreator, PasswordEncoder passwordEncoder, JwtUtils jwtUtils) {
+    public AuthenticationService(AuthenticationManager authenticationManager, UserRepository userRepository, AccountRepository accountRepository, EmailService emailService, ActivationLinkCreator activationLinkCreator, PasswordEncoder passwordEncoder, JwtUtils jwtUtils, AuditEventService auditEventService) {
         this.authenticationManager = authenticationManager;
         this.userRepository = userRepository;
         this.accountRepository = accountRepository;
@@ -40,6 +43,7 @@ public class AuthenticationService {
         this.activationLinkCreator = activationLinkCreator;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
+        this.auditEventService = auditEventService;
     }
 
     public ResponseEntity<?> register(SignUpDto signUpDto) {
@@ -58,6 +62,8 @@ public class AuthenticationService {
                 UUID.randomUUID());
         accountRepository.save(account);
         LOGGER.info("Account created successfully");
+        
+        auditEventService.logAuditEvent(AuditEventType.NEW_USER_REGISTERED, "User with new account registered");
 
         EmailMessage emailMessage = EmailContentGenerator.generateCreateAccountEmailMessage(signUpDto.getFirstName(),
                 signUpDto.getEmail(), activationLinkCreator.create(account.getActivationToken()));
