@@ -1,5 +1,7 @@
 package com.agh.communicationplatform.report;
 
+import com.agh.communicationplatform.account.Account;
+import com.agh.communicationplatform.account.AccountService;
 import com.agh.communicationplatform.audit.AuditEventService;
 import com.agh.communicationplatform.audit.AuditEventType;
 import com.agh.communicationplatform.device.Device;
@@ -12,16 +14,21 @@ import com.lowagie.text.pdf.PdfWriter;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Component
 public class ReportGenerator {
 
     private final AuditEventService auditEventService;
     private final DeviceService deviceService;
+    private final AccountService accountService;
 
-    public ReportGenerator(AuditEventService auditEventService, DeviceService deviceService) {
+    public ReportGenerator(AuditEventService auditEventService, DeviceService deviceService, AccountService accountService) {
         this.auditEventService = auditEventService;
         this.deviceService = deviceService;
+        this.accountService = accountService;
     }
 
     public void export(HttpServletResponse response) throws DocumentException, IOException {
@@ -39,7 +46,16 @@ public class ReportGenerator {
         fontParagraph.setSize(12);
 
         List<Device> devices = deviceService.getAllDevices();
+        List<Account> accounts = accountService.getAccounts();
+        Map<String, List<Device>> devicesPerState = devices.stream()
+                .collect(groupingBy(Device::getState));
+
         StringBuilder builder = new StringBuilder();
+        builder.append("Registered accounts: ").append(accounts.size()).append("\n\n");
+        builder.append("Devices states:\n\n");
+        devicesPerState.forEach((state, devicePerState) ->
+                builder.append(state).append(": ").append(devicePerState.size()).append("\n"));
+        builder.append("\n");
         builder.append("Registered devices:\n\n");
         devices.forEach(d -> {
             builder.append("Name: ").append(d.getName()).append("\n");
