@@ -55,16 +55,21 @@ public class DeviceService {
     }
 
     @Transactional
-    public void changeDeviceState(Long deviceId, String state) {
+    public void changeDeviceState(Long deviceId, String newState) {
         final boolean isDeviceExists = deviceRepository.existsDeviceByDeviceId(deviceId);
 
         if (!isDeviceExists) {
             throw new RuntimeException("Device does not exist");
         }
 
-        deviceRepository.changeDeviceState(deviceId, state);
+        Device device = deviceRepository.getById(deviceId);
+        if ("DISABLED".equals(device.getState()) && "ACTIVE".equals(newState)) {
+            throw new RuntimeException("Cannot change device state to active when is disabled");
+        }
 
-        auditEventService.logAuditEvent(AuditEventType.CHANGED_DEVICE_STATE, "Changed IoT device with " + deviceId + " id to " + state);
+        deviceRepository.changeDeviceState(deviceId, newState);
+
+        auditEventService.logAuditEvent(AuditEventType.CHANGED_DEVICE_STATE, "Changed IoT device with " + deviceId + " id to " + newState);
     }
 
     @Transactional
