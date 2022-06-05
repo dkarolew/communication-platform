@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import styled from "styled-components";
-import {addDevice, deleteDevice, fetchDevices} from "../api/api";
+import {addDevice, deleteDevice, fetchAllDevices, fetchDevicesForUser} from "../api/api";
 import {UserInfoContext} from "../utils/UserInfoContext";
 
 
@@ -16,13 +16,22 @@ const UserDevicesControlPanel = () => {
     const {userInfo} = useContext(UserInfoContext);
 
     useEffect(() => {
-        fetchDevices(userInfo.token)
-            .then(response => {
-                if (response.status === 200) {
-                    response.json().then(data => setDevices(data))
-                }
-            });
-    }, [devices, userInfo.token])
+        if (userInfo.role === 'ADMIN') {
+            fetchAllDevices(userInfo.token, userInfo.userId)
+                .then(response => {
+                    if (response.status === 200) {
+                        response.json().then(data => setDevices(data))
+                    }
+                });
+        } else {
+            fetchDevicesForUser(userInfo.token, userInfo.userId)
+                .then(response => {
+                    if (response.status === 200) {
+                        response.json().then(data => setDevices(data))
+                    }
+                });
+        }
+    }, [devices, userInfo.token, userInfo.userId])
 
     const addNewDevice = (e: any) => {
         e.preventDefault()

@@ -6,21 +6,27 @@ import {UserInfoContext} from "../utils/UserInfoContext";
 
 const ControlPanel = () => {
 
-    const [frequency, setFrequency] = useState(1000);
+    const [frequency, setFrequency] = useState();
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [deviceId, setDeviceId] = useState();
 
     // @ts-ignore
     const {userInfo} = useContext(UserInfoContext);
 
-    const changeState = (state: string) => {
+    const changeState = (state: string, deviceId: number) => {
+        if (deviceId === '') {
+            alert("Please select device")
+            return
+        }
+
         const deviceDto = {
-            deviceId: 1,
-            userId: 1,
+            deviceId: deviceId,
+            userId: userInfo.userId,
             name: '',
             model: '',
             state: state,
-            measurementFrequency: 5000
+            measurementFrequency: -1
         }
 
         changeDeviceState(deviceDto, userInfo.token)
@@ -35,10 +41,10 @@ const ControlPanel = () => {
             });
     }
 
-    const changeFrequency = (frequency: number) => {
+    const changeFrequency = (frequency: number, deviceId: number) => {
         const deviceDto = {
-            deviceId: 1,
-            userId: 1,
+            deviceId: deviceId,
+            userId: userInfo.userId,
             name: '',
             model: '',
             state: 'ACTIVE',
@@ -64,10 +70,20 @@ const ControlPanel = () => {
                 You can start/stop and change frequency of measurements by controls below.
             </p>
             <div style={{paddingTop: '20px'}}>
+                <StyledLabel>Device ID</StyledLabel>
+                <StyledInput
+                    type='text'
+                    placeholder='ID'
+                    value={deviceId}
+                    onChange={(e) =>
+                        setDeviceId(e.target.value)}
+                />
+            </div>
+            <div style={{paddingTop: '20px'}}>
                 <button
                     style={{background: 'darkgreen', border: 'black', width: '350px', height: '40px'}}
                     className="btn btn-primary"
-                    onClick={() => changeState('ACTIVE')}>
+                    onClick={() => changeState('ACTIVE', deviceId)}>
                     Start
                 </button>
             </div>
@@ -75,7 +91,7 @@ const ControlPanel = () => {
                 <button
                     style={{background: 'darkred', border: 'black', width: '350px', height: '40px'}}
                     className="btn btn-primary"
-                    onClick={() => changeState('NOT_ACTIVE')}>
+                    onClick={() => changeState('NOT_ACTIVE', deviceId)}>
                     Stop
                 </button>
             </div>
@@ -92,7 +108,7 @@ const ControlPanel = () => {
                     <button
                         style={{background: 'darkblue', border: 'black', width: '350px', height: '40px'}}
                         className="btn btn-primary"
-                        onClick={() => changeFrequency(frequency)}>
+                        onClick={() => changeFrequency(frequency, deviceId)}>
                         Change
                     </button>
                 </div>
@@ -124,4 +140,15 @@ export default ControlPanel
 
 const StyledDiv = styled.div`
     margin: 20px;
+`;
+
+const StyledLabel = styled.label`
+    display: block;
+`;
+
+const StyledInput = styled.input`
+    width: 350px;  
+    height: 40px;
+    padding: 3px 7px;
+    font-size: 17px;
 `;

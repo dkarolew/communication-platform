@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface DeviceRepository extends JpaRepository<Device, Long> {
 
@@ -22,4 +24,10 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
                         "WHERE device_id = :deviceId",
             nativeQuery = true)
     void changeMeasurementFrequency(@Param("deviceId") Long deviceId, @Param("measurementFrequency") Long measurementFrequency);
+
+    @Query(value = "SELECT * FROM device " +
+                        "JOIN account ON account.account_id = device.account_id " +
+                        "WHERE account.user_id = :userId",
+            nativeQuery = true)
+    List<Device> findDevicesForUser(@Param("userId") Long userId);
 }

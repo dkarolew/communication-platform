@@ -16,8 +16,13 @@ public class DeviceController {
     }
 
     @GetMapping
-    List<Device> getDevices() {
-        return deviceService.getDevices();
+    List<Device> getAllDevices() {
+        return deviceService.getAllDevices();
+    }
+
+    @GetMapping("/byUser")
+    List<Device> findDevicesForUser(@RequestParam("userId") Long userId) {
+        return deviceService.findDevicesForUser(userId);
     }
 
     @GetMapping("/{deviceId}")

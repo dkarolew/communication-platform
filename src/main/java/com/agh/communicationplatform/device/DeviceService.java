@@ -22,8 +22,12 @@ public class DeviceService {
         this.auditEventService = auditEventService;
     }
 
-    public List<Device> getDevices() {
+    public List<Device> getAllDevices() {
         return deviceRepository.findAll();
+    }
+
+    public List<Device> findDevicesForUser(Long userId) {
+        return deviceRepository.findDevicesForUser(userId);
     }
 
     @Transactional

@@ -55,8 +55,17 @@ export async function changeDeviceMeasurementFrequency(deviceDto: DeviceDto, tok
     });
 }
 
-export async function fetchDevices(token: string) : Promise<any> {
+export async function fetchAllDevices(token: string) : Promise<any> {
     return await fetch(BASE_API_URL + "/device", {
+        method: 'GET',
+        headers: {
+            'Authorization': token
+        }
+    })
+}
+
+export async function fetchDevicesForUser(token: string, userId: number) : Promise<any> {
+    return await fetch(BASE_API_URL + "/device/byUser" + "?userId=" + userId, {
         method: 'GET',
         headers: {
             'Authorization': token

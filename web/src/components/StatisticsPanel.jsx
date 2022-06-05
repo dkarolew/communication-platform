@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Cell, Legend, Pie, PieChart} from "recharts";
-import {fetchDevices} from "../api/api";
+import {fetchAllDevices} from "../api/api";
 import {UserInfoContext} from "../utils/UserInfoContext";
 import styled from "styled-components";
 
@@ -14,7 +14,7 @@ const StatisticsPanel = () => {
     const [devices, setDevices] = useState([]);
 
     useEffect(() => {
-        fetchDevices(userInfo.token)
+        fetchAllDevices(userInfo.token)
             .then(response => {
                 if (response.status === 200) {
                     response.json().then(data => setDevices(data))
