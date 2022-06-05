@@ -14,8 +14,8 @@ public class MeasurementService {
         this.measurementRepository = measurementRepository;
     }
 
-    public List<Measurement> readMeasurement() {
-        return measurementRepository.findAll();
+    public List<Measurement> readMeasurement(Long deviceId, String type) {
+        return measurementRepository.findAllByDeviceIdAndType(deviceId, type);
     }
 
     public void saveMeasurement(MeasurementDto measurementDto) {

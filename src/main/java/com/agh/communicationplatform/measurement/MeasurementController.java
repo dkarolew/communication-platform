@@ -16,8 +16,8 @@ public class MeasurementController {
     }
 
     @GetMapping
-    List<Measurement> readMeasurement() {
-        return measurementService.readMeasurement();
+    List<Measurement> readMeasurement(@RequestParam("deviceId") Long deviceId, @RequestParam("type") String type) {
+        return measurementService.readMeasurement(deviceId, type);
     }
 
     @PostMapping

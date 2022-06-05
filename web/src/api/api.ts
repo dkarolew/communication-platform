@@ -22,8 +22,8 @@ export async function signIn(signInDto: SignInDto) : Promise<any> {
     })
 }
 
-export async function fetchMeasurements(token: string) : Promise<any> {
-    const response = await fetch(BASE_API_URL + "/measurement", {
+export async function fetchMeasurements(token: string, deviceId: number, type: string) : Promise<any> {
+    const response = await fetch(BASE_API_URL + `/measurement?deviceId=${deviceId}&type=${type}`, {
         method: 'GET',
         headers: {
             'Authorization': token

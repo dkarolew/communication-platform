@@ -1,33 +1,64 @@
 import React, {useContext, useEffect, useState} from "react";
 import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
+import Select from 'react-dropdown-select';
 import {UserInfoContext} from "../utils/UserInfoContext";
-import {fetchMeasurements} from "../api/api";
+import {fetchDevicesForUser, fetchMeasurements} from "../api/api";
 import styled from "styled-components";
 
 
-const ChartsPanel = (humidity) => {
+const ChartsPanel = () => {
 
-    const [measurements, setMeasurements] = useState([]);
+    const [temperature, setTemperature] = useState([]);
+    const [humidity, setHumidity] = useState([]);
+    const [deviceId, setDeviceId] = useState(-1);
+    const [devices, setDevices] = useState([]);
 
     // @ts-ignore
     const {userInfo} = useContext(UserInfoContext);
 
-    const prepareMeasurements = (data) => {
-        let measurements = [];
+    const prepareDeviceOptions = (data) => {
+        let deviceOptions = [];
         for (let i = 0; i < data.length; i++) {
+            deviceOptions.push({
+                "value": data[i].deviceId,
+                "label": data[i].deviceId.toString()
+            });
+        }
+        return deviceOptions;
+    }
+
+    const prepareMeasurements = (temperature, humidity) => {
+        let measurements = [];
+        for (let i = 0; i < temperature.length; i++) {
             measurements.push({
-                "date": data[i].measurementTime.substring(0, 10),
-                "temperature": data[i].value,
-                "humidity": humidity.humidity[i]
+                "date": temperature[i].measurementTime.substring(0, 10),
+                "temperature": temperature[i]?.value,
+                "humidity": humidity[i]?.value
             });
         }
         return measurements;
     }
 
     useEffect(() => {
-        fetchMeasurements(userInfo.token)
-            .then(data => setMeasurements(data));
-    }, [measurements, userInfo.token]);
+        fetchDevicesForUser(userInfo.token, userInfo.userId)
+            .then(response => {
+                if (response.status === 200) {
+                    response.json().then(data => {
+                        setDevices(data)
+                    })
+                }
+            });
+    }, [devices, userInfo.token, userInfo.userId]);
+
+    useEffect(() => {
+        fetchMeasurements(userInfo.token, deviceId, "TEMPERATURE")
+            .then(data => setTemperature(data));
+    }, [temperature, userInfo.token, deviceId]);
+
+    useEffect(() => {
+        fetchMeasurements(userInfo.token, deviceId, "HUMIDITY")
+            .then(data => setHumidity(data));
+    }, [humidity, userInfo.token, deviceId]);
 
     return (
         <StyledDiv>
@@ -37,21 +68,34 @@ const ChartsPanel = (humidity) => {
             <p>
                 Here you can monitor measurements made by IoT devices.
             </p>
-            <LineChart
-                width={1200}
-                height={500}
-                data={prepareMeasurements(measurements)}
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" />
-                <Tooltip />
-                <Legend />
-                <Line yAxisId="left" type="monotone" dataKey="temperature" stroke="#c70039" activeDot={{ r: 5 }} />
-                <Line yAxisId="right" type="monotone" dataKey="humidity" stroke="#1a1898" activeDot={{ r: 5 }} />
-            </LineChart>
+            <label>Device ID:</label>
+            <div style={{paddingTop: '10px'}}>
+                <Select
+                    style={{width: '20%'}}
+                    disabled={false}
+                    onChange={(device) => setDeviceId(device[0].value)}
+                    options={prepareDeviceOptions(devices)}
+                    value={deviceId}
+                    values={[]}
+                />
+            </div>
+            <div style={{paddingTop: '20px'}}>
+                <LineChart
+                    width={1200}
+                    height={500}
+                    data={prepareMeasurements(temperature, humidity)}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="date" />
+                    <YAxis yAxisId="left" />
+                    <YAxis yAxisId="right" orientation="right" />
+                    <Tooltip />
+                    <Legend />
+                    <Line yAxisId="left" type="monotone" dataKey="temperature" stroke="#c70039" activeDot={{ r: 5 }} />
+                    <Line yAxisId="right" type="monotone" dataKey="humidity" stroke="#1a1898" activeDot={{ r: 5 }} />
+                </LineChart>
+            </div>
         </StyledDiv>
     )
 }
