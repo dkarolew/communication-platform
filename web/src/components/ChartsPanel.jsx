@@ -2,7 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {CartesianGrid, Legend, Line, LineChart, Tooltip, XAxis, YAxis} from "recharts";
 import Select from 'react-dropdown-select';
 import {UserInfoContext} from "../utils/UserInfoContext";
-import {fetchDevicesForUser, fetchMeasurements} from "../api/api";
+import {fetchAllDevices, fetchDevicesForUser, fetchMeasurements} from "../api/api";
 import styled from "styled-components";
 
 
@@ -31,7 +31,7 @@ const ChartsPanel = () => {
         let measurements = [];
         for (let i = 0; i < temperature.length; i++) {
             measurements.push({
-                "date": temperature[i].measurementTime.substring(0, 10),
+                "date": temperature[i].measurementTime.substring(5, 19).replace('T', ' '),
                 "temperature": temperature[i]?.value,
                 "humidity": humidity[i]?.value
             });
@@ -40,15 +40,26 @@ const ChartsPanel = () => {
     }
 
     useEffect(() => {
-        fetchDevicesForUser(userInfo.token, userInfo.userId)
-            .then(response => {
-                if (response.status === 200) {
-                    response.json().then(data => {
-                        setDevices(data)
-                    })
-                }
-            });
-    }, [devices, userInfo.token, userInfo.userId]);
+        if (userInfo.role === "ADMIN") {
+            fetchAllDevices(userInfo.token)
+                .then(response => {
+                    if (response.status === 200) {
+                        response.json().then(data => {
+                            setDevices(data)
+                        })
+                    }
+                });
+        } else {
+            fetchDevicesForUser(userInfo.token, userInfo.userId)
+                .then(response => {
+                    if (response.status === 200) {
+                        response.json().then(data => {
+                            setDevices(data)
+                        })
+                    }
+                });
+        }
+    }, [devices, userInfo.token, userInfo.userId, userInfo.role]);
 
     useEffect(() => {
         fetchMeasurements(userInfo.token, deviceId, "TEMPERATURE")
@@ -87,7 +98,7 @@ const ChartsPanel = () => {
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
                     <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
+                    <XAxis dataKey="date" interval={temperature.length % 5} />
                     <YAxis yAxisId="left" />
                     <YAxis yAxisId="right" orientation="right" />
                     <Tooltip />
