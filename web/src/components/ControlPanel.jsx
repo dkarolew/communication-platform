@@ -101,6 +101,7 @@ const ControlPanel = () => {
                     type="text"
                     className="form-control"
                     value={frequency}
+                    placeholder='Frequency'
                     style={{border: '2px solid black', width: '350px'}}
                     onChange={(e) => setFrequency(e.target.value)}
                 />
@@ -112,6 +113,27 @@ const ControlPanel = () => {
                         Change
                     </button>
                 </div>
+                {userInfo.role === 'ADMIN' && (
+                    <div style={{paddingTop: '40px'}}>
+                        <label style={{fontSize: '18px'}}>Enable or disable device</label>
+                        <div style={{paddingTop: '5px'}}>
+                            <button
+                                style={{background: '#cccc00', border: 'black', width: '350px', height: '40px'}}
+                                className="btn btn-primary"
+                                onClick={() => changeState("NOT_ACTIVE", deviceId)}>
+                                Enable
+                            </button>
+                        </div>
+                        <div style={{paddingTop: '20px'}}>
+                            <button
+                                style={{background: 'black', border: 'black', width: '350px', height: '40px'}}
+                                className="btn btn-primary"
+                                onClick={() => changeState("DISABLED", deviceId)}>
+                                Disable
+                            </button>
+                        </div>
+                    </div>
+                )}
                 {error && (
                     <p
                         className="alert alert-danger"

@@ -31,7 +31,7 @@ const UserDevicesControlPanel = () => {
                     }
                 });
         }
-    }, [devices, userInfo.token, userInfo.userId])
+    }, [devices, userInfo.token, userInfo.userId, userInfo.role])
 
     const addNewDevice = (e: any) => {
         e.preventDefault()
