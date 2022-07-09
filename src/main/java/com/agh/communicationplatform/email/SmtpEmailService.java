@@ -16,7 +16,7 @@ public class SmtpEmailService implements EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SmtpEmailService.class);
     private static final String SENDER = "communication.platformm@gmail.com";
-    private static final String PASSWORD = "kn#:6&H7mu&WVP?z9K$a";
+    private static final String PASSWORD = "";
 
     private final AuditEventService auditEventService;
 
